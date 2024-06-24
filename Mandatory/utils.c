@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 00:26:53 by relamine          #+#    #+#             */
-/*   Updated: 2024/05/24 23:43:00 by relamine         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:03:50 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_atoi(const char *str)
 
 	res = 0;
 	if ((*str >= 9 && *str <= 13) || *str == 32)
-		return (-1);
+		return (write(1, "illegal pid: ", 13), -1);
 	if (*str == '-' || *str == '+')
 	{
 		return (write(1, "illegal pid: ", 13), -1);
@@ -51,7 +51,7 @@ size_t	ft_strlen(const char *s)
 
 void	ft_putnbr(int n)
 {
-	char a;
+	char	a;
 
 	a = '\0';
 	if (n > 9)
@@ -64,4 +64,10 @@ void	ft_putnbr(int n)
 		a = (n + 48);
 		write(1, &a, 1);
 	}
+}
+
+void	protect_kill(int pid_server, int signal)
+{
+	if (kill(pid_server, signal))
+		exit(1);
 }

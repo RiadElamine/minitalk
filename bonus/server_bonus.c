@@ -6,45 +6,83 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 00:14:58 by relamine          #+#    #+#             */
-/*   Updated: 2024/05/26 11:27:58 by relamine         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:23:35 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "head_bonus.h"
-#include <stdio.h>
 
-void signal_handler(int signal,siginfo_t *info, void *others) 
+static void	ft_print(unsigned char *b)
 {
-	static char byte;
-	static int	count;
-	static int	index;
-	static int	si_pid;
-	char 		*chars[5];
+	int	i;
+
+	i = 0;
+	while (b[i])
+	{
+		write(1, &b[i], 1);
+		b[i] = '\0';
+		i++;
+	}
+}
+
+static int	ft_print_bytes(unsigned char *b, pid_t	si_pid)
+{
+	if (b[0] == 0)
+		return (protect_kill(si_pid, SIGUSR2), 1);
+	if (b[0] <= 127)
+		return (ft_print(b), 1);
+	if ((b[0] >= 194 && b[0] <= 223) && b[1] != '\0')
+		return (ft_print(b), 1);
+	if ((b[0] >= 224 && b[0] <= 239) && b[1] != '\0' && b[2] != '\0')
+		return (ft_print(b), 1);
+	if (b[0] >= 240 && b[1] != '\0' && b[2] != '\0' && b[3] != '\0')
+		return (ft_print(b), 1);
+	return (0);
+}
+
+static void	ft_rest(unsigned char *bytes, int *index,
+	int *count, unsigned char	*byte)
+{
+	*index = 0;
+	while (*index < 4)
+		bytes[(*index)++] = '\0';
+	*count = 0;
+	*byte = 0;
+	*index = 0;
+}
+
+static void	signal_handler(int signal, siginfo_t *info, void *others)
+{
+	static unsigned char	byte;
+	static int				count;
+	static pid_t			si_pid;
+	static unsigned char	bytes[4];
+	static int				index;
 
 	(void)others;
 	if (si_pid != info->si_pid)
 	{
+		ft_rest(bytes, &index, &count, &byte);
 		si_pid = info->si_pid;
-		count = 0;
-		byte = 0;
 	}
 	if (signal == SIGUSR1)
-	byte =  128 >> count | byte;
+		byte = 128 >> count | byte;
 	count++;
 	if (count == 8)
 	{
-		chars[index] = malloc(1);
-		chars[index] = byte;
+		bytes[index] = byte;
+		index++;
+		if (ft_print_bytes(bytes, si_pid))
+			index = 0;
 		count = 0;
 		byte = 0;
 	}
 }
 
-
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	pid_t pid;
-	struct sigaction action;
+	struct sigaction	action;
+	pid_t				pid;
 
 	pid = getpid();
 	action.sa_flags = SA_SIGINFO;
@@ -60,7 +98,5 @@ int main(int argc, char **argv)
 	if (sigaction(SIGUSR2, &action, NULL) == -1)
 		exit(1);
 	while (1)
-	{
 		pause();
-	}
 }
