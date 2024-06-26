@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 00:26:53 by relamine          #+#    #+#             */
-/*   Updated: 2024/06/24 15:06:30 by relamine         ###   ########.fr       */
+/*   Updated: 2024/06/26 01:01:48 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,19 @@ int	ft_atoi(const char *str)
 
 	res = 0;
 	if ((*str >= 9 && *str <= 13) || *str == 32)
-		return (write(1, "illegal pid: ", 13), -1);
+		return (-1);
 	if (*str == '-' || *str == '+')
 	{
-		return (write(1, "illegal pid: ", 13), -1);
+		return (-1);
 		str++;
 	}
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
-			return (write(1, "illegal pid: ", 13), -1);
+			return (-1);
+		if ((res > (2147483647 / 10)) || (res == (2147483647
+					/ 10) && *str > '7'))
+			return (-1);
 		res = res * 10 + (*str - 48);
 		str++;
 	}

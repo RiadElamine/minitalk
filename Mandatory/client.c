@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 00:15:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/06/24 15:03:41 by relamine         ###   ########.fr       */
+/*   Updated: 2024/06/26 00:58:24 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int	main(int argc, char **argv)
 		return (write(1, "error in arguments", 18));
 	pid_server = ft_atoi(argv[1]);
 	if (pid_server < 0)
-		return (write(1, argv[1], ft_strlen(argv[1])), 1);
+		return (write(1, "illegal pid: ", 13),
+			write(1, argv[1], ft_strlen(argv[1])), 1);
 	while (*argv[2])
 	{
 		i = 8;

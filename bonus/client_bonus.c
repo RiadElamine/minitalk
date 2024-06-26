@@ -6,7 +6,7 @@
 /*   By: relamine <relamine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 00:15:00 by relamine          #+#    #+#             */
-/*   Updated: 2024/06/24 15:24:07 by relamine         ###   ########.fr       */
+/*   Updated: 2024/06/26 00:48:42 by relamine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ static int	parsing_client(int argc, char **argv, int *pid_server)
 				ft_strlen("error in arguments")));
 	*pid_server = ft_atoi(argv[1]);
 	if (*pid_server < 0)
+	{
+		write(1, "illegal pid: ", 13);
 		return (write(1, argv[1], ft_strlen(argv[1])));
+	}
 	return (0);
 }
 
