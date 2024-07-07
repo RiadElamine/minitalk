@@ -25,10 +25,7 @@ int	ft_atoi(const char *str)
 	if ((*str >= 9 && *str <= 13) || *str == 32)
 		return (-1);
 	if (*str == '-' || *str == '+')
-	{
 		return (-1);
-		str++;
-	}
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
